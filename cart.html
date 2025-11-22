@@ -1,0 +1,65 @@
+<!doctype html>
+<html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Carrito - Glory shop Osmarel</title>
+<link rel="stylesheet" href="styles.css"/>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="firebaseConfig.js"></script>
+<script>firebase.initializeApp(firebaseConfig);</script>
+</head><body>
+<header class="header"><div class="logo"><img src="assets/auth_screenshot.png" alt="logo" style="height:40px"/><div><b>Glory shop Osmarel</b></div></div></header>
+<main class="container">
+  <h2>Carrito</h2>
+  <div id="cartList" class="card"></div>
+  <div class="card">
+    <p><strong>Precios ocultos — solicitar presupuesto</strong></p>
+    <label>Observaciones:</label><textarea id="notes"></textarea>
+    <button id="orderBtn">Hacer encargo por WhatsApp</button>
+  </div>
+</main>
+<script>
+function createWhatsAppLink(adminNumber, user, cartItems, notes){
+  const lines = [];
+  lines.push('Encargo desde Sitio:');
+  lines.push('Cliente: ' + (user.email || 'Sin email') + ' (uid:' + (user.uid||'') + ')');
+  lines.push('');
+  lines.push('Items:');
+  cartItems.forEach((it,i)=>{
+    if(it.type==='internal'){
+      lines.push((i+1)+') ' + (it.name || it.sku) + ' (SKU:' + (it.sku||'') +')');
+    } else {
+      lines.push((i+1)+') ' + (it.link));
+    }
+  });
+  if(notes) lines.push('Notas: ' + notes);
+  return 'https://wa.me/' + adminNumber + '?text=' + encodeURIComponent(lines.join('\n'));
+}
+
+document.getElementById('orderBtn').onclick = async ()=>{
+  const cart = JSON.parse(localStorage.getItem('cart')||'[]');
+  if(cart.length===0){ alert('Carrito vacío'); return; }
+  const notes = document.getElementById('notes').value;
+  const auth = firebase.auth();
+  const user = auth.currentUser;
+  if(!user){ if(!confirm('Debes iniciar sesión para hacer el encargo. Ir a login?')) return window.location.href='login.html'; }
+  const adminNumber = '5493412345678'; // reemplaza por tu número con código país
+  const link = createWhatsAppLink(adminNumber, user, cart, notes);
+  window.open(link, '_blank');
+}
+function render(){
+  const cart = JSON.parse(localStorage.getItem('cart')||'[]');
+  const el = document.getElementById('cartList');
+  if(cart.length===0){ el.innerHTML = '<div class="small">Carrito vacío</div>'; return; }
+  el.innerHTML = '';
+  cart.forEach((it,i)=>{
+    const d = document.createElement('div'); d.className='card';
+    d.innerHTML = '<p>' + (it.type==='internal'? (it.name + ' (SKU:' + (it.sku||'') + ')') : ('Enlace: <a href="'+it.link+'" target="_blank">'+it.link+'</a>')) + '</p><button data-i="'+i+'" class="removeBtn">Eliminar</button>';
+    el.appendChild(d);
+  });
+  document.querySelectorAll('.removeBtn').forEach(b=> b.onclick = ()=>{
+    const i = parseInt(b.getAttribute('data-i'));
+    const cart = JSON.parse(localStorage.getItem('cart')||'[]'); cart.splice(i,1); localStorage.setItem('cart', JSON.stringify(cart)); render();
+  });
+}
+render();
+</script>
+</body></html>

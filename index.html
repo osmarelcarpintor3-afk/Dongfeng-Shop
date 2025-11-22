@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Glory shop Osmarel - Encargos Dongfeng Glory 330s</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+  <script src="firebaseConfig.js"></script>
+  <script src="admin.js"></script>
+  <script>
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</head>
+<body>
+  <header class="header">
+    <div class="logo">
+      <img src="assets/auth_screenshot.png" alt="logo"/>
+      <div>
+        <div style="font-weight:bold">Glory shop Osmarel</div>
+        <div class="small">Encargos de piezas y accesorios - Dongfeng Glory 330s</div>
+      </div>
+    </div>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="catalog.html">Catálogo</a>
+      <a href="market.html">Buscar tiendas</a>
+      <a href="models.html">Modelos</a>
+      <a href="videos.html">Videos</a>
+      <a href="chat.html">Chat</a>
+      <a href="cart.html">Carrito</a>
+      <a href="admin.html">Admin</a>
+    </nav>
+    <div id="authArea" class="small"></div>
+  </header>
+  <main class="container">
+    <div class="card">
+      <h1>Bienvenido a Glory shop Osmarel</h1>
+      <p>Encargos de piezas y accesorios para Dongfeng Glory 330s y otros. Regístrate para hacer encargos y agregar productos al carrito.</p>
+      <p>Buscador integrado hacia Taobao, Amazon.ca, AliExpress, Alibaba y SHEIN. Agrega enlaces externos a tu carrito y pide un encargo por WhatsApp.</p>
+      <p>Los precios se mantienen ocultos para que solicites presupuesto.</p>
+      <p><strong>Cómo funciona:</strong> 1) Regístrate / Inicia sesión → 2) Busca en catálogo interno o en tiendas externas → 3) Añade al carrito → 4) Hacer encargo (se abrirá WhatsApp con tu pedido).</p>
+    </div>
+    <div class="card">
+      <h3>Acceso rápido</h3>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <a href="catalog.html"><button>Ver catálogo interno</button></a>
+        <a href="market.html"><button>Buscar en tiendas externas</button></a>
+        <a href="videos.html"><button>Ver videos</button></a>
+      </div>
+    </div>
+  </main>
+  <footer class="footer">Glory shop Osmarel — Encargos de piezas y accesorios para Dongfeng Glory 330s</footer>
+  <script>
+    // Auth UI update
+    const auth = firebase.auth();
+    const authArea = document.getElementById('authArea');
+    function updateAuthUI(user){
+      if(user){
+        authArea.innerHTML = user.email + " | <a href='#' id='logoutLink'>Cerrar sesión</a>";
+        document.getElementById('logoutLink').onclick = ()=> auth.signOut();
+      } else {
+        authArea.innerHTML = "<a href='login.html'>Iniciar / Registrarse</a>";
+      }
+    }
+    auth.onAuthStateChanged(updateAuthUI);
+  </script>
+</body>
+</html>

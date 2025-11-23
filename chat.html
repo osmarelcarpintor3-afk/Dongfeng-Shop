@@ -1,0 +1,26 @@
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'/><title>Chat - Glory shop Osmarel</title>
+<link rel='stylesheet' href='styles.css'/>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js'></script>
+<script src='firebaseConfig.js'></script>
+<script src='admin.js'></script>
+<script>firebase.initializeApp(firebaseConfig);</script>
+</head><body>
+<header class='header'><div class='top'><img src='assets/logo.png' class='site-logo' alt='Glory shop Osmarel'><nav class='nav'><a href='index.html'>Inicio</a><a href='catalog.html'>Catálogo</a><a href='market.html'>Buscar tiendas</a><a href='models.html'>Modelos</a><a href='videos.html'>Videos</a><a href='chat.html'>Chat</a><a href='cart.html'>Carrito</a><a href='admin.html'>Admin</a></nav></div></header>
+<main class='container'><div class='card'><h2>Chat en vivo</h2><div id='userList' class='card'></div><div id='messages' class='card' style='max-height:300px;overflow:auto'></div>
+<div class='card'><input id='msgInput' placeholder='Escribe un mensaje...'/><button id='sendBtn' class='btn'>Enviar</button></div></div>
+<script>
+var auth = firebase.auth();
+var db = firebase.database();
+var fs = firebase.firestore();
+auth.onAuthStateChanged(function(user){ if(!user) window.location.href='login.html'; else { var presRef = db.ref('presence/'+user.uid); presRef.set({email:user.email, ts:Date.now()}); presRef.onDisconnect().remove(); } });
+async function loadUsers(){ var ul = document.getElementById('userList'); ul.innerHTML='<strong>Usuarios</strong><br/>'; var snap = await fs.collection('users').get(); snap.forEach(function(doc){ var u = doc.data(); var id = doc.id; var div = document.createElement('div'); div.id = 'user-'+id; div.innerHTML = '<span id="dot-'+id+'" style="display:inline-block;width:10px;height:10px;border-radius:10px;background:#666;margin-right:8px"></span>' + (u.email||u.phone||'Usuario'); ul.appendChild(div); db.ref('presence/'+id).on('value', function(s){ var dot = document.getElementById('dot-'+id); if(s && s.val()) dot.style.background = '#2ee44a'; else dot.style.background = '#666'; }); }); }
+loadUsers();
+document.getElementById('sendBtn').onclick = function(){ var text = document.getElementById('msgInput').value.trim(); if(!text) return; var mref = db.ref('chatMessages').push(); mref.set({userId:auth.currentUser.uid, displayName:auth.currentUser.email, message:text, createdAt:Date.now()}); document.getElementById('msgInput').value=''; };
+db.ref('chatMessages').limitToLast(200).on('child_added', function(snap){ var m = snap.val(); var d = document.createElement('div'); d.innerHTML = '<strong>'+(m.displayName||'Anon')+':</strong> '+m.message; document.getElementById('messages').appendChild(d); document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight; });
+</script></main>
+<footer class='footer card' style='text-align:center'>Glory shop Osmarel — Encargos de piezas y accesorios para Dongfeng Glory 330s</footer>
+<button id='toHomeBtn' onclick="location.href='index.html'">Inicio</button>
+</body></html>

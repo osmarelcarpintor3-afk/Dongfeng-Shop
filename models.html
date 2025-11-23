@@ -1,0 +1,16 @@
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'/><title>Modelos - Glory shop Osmarel</title>
+<link rel='stylesheet' href='styles.css'/>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js'></script>
+<script src='firebaseConfig.js'></script>
+<script src='admin.js'></script>
+<script>firebase.initializeApp(firebaseConfig);</script>
+</head><body>
+<header class='header'><div class='top'><img src='assets/logo.png' class='site-logo' alt='Glory shop Osmarel'><nav class='nav'><a href='index.html'>Inicio</a><a href='catalog.html'>Catálogo</a><a href='market.html'>Buscar tiendas</a><a href='models.html'>Modelos</a><a href='videos.html'>Videos</a><a href='chat.html'>Chat</a><a href='cart.html'>Carrito</a><a href='admin.html'>Admin</a></nav></div></header>
+<main class='container'><div class='card'><h2>Características por modelo y año</h2><label>Selecciona modelo/año</label><select id='modelSelect'><option value='glory330-2015'>Dongfeng Glory 330s - 2015</option><option value='glory330-2016'>Dongfeng Glory 330s - 2016</option><option value='glory330-2017'>Dongfeng Glory 330s - 2017</option></select><div id='modelInfo' class='card small'></div></div>
+<script>var info={'glory330-2015':'Motor 1.5L, transmisión manual.','glory330-2016':'Motor 1.5L, mejoras en suspensión.','glory330-2017':'Motor 1.6L en algunas versiones.'}; document.getElementById('modelSelect').onchange = function(e){ document.getElementById('modelInfo').innerText = info[e.target.value]; }; document.getElementById('modelInfo').innerText = info['glory330-2015'];</script></main>
+<footer class='footer card' style='text-align:center'>Glory shop Osmarel — Encargos de piezas y accesorios para Dongfeng Glory 330s</footer>
+<button id='toHomeBtn' onclick="location.href='index.html'">Inicio</button>
+</body></html>

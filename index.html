@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'/><title>Glory shop Osmarel</title>
+<link rel='stylesheet' href='styles.css'/>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js'></script>
+<script src='firebaseConfig.js'></script>
+<script src='admin.js'></script>
+<script>firebase.initializeApp(firebaseConfig);</script>
+</head><body>\n<div id="hero-carousel" class="container hero"></div>\n<script src="app.js"></script>\n<script>document.addEventListener("auth-changed",()=> loadHomepageImages()); loadHomepageImages();</script>
+<header class='header'><div class='top'><img src='assets/logo.png' class='site-logo' alt='Glory shop Osmarel'><nav class='nav'><a href='index.html'>Inicio</a><a href='catalog.html'>Catálogo</a><a href='market.html'>Buscar tiendas</a><a href='models.html'>Modelos</a><a href='videos.html'>Videos</a><a href='chat.html'>Chat</a><a href='cart.html'>Carrito</a><a href='admin.html'>Admin</a></nav></div></header>
+<main class='container'><div class='hero card'><img src='assets/dongfeng_glory_330s.jpg' alt='Dongfeng Glory 330s'/><div class='hero-text'><h1>Glory shop Osmarel</h1><p class='small'>Encargos de piezas y accesorios para Dongfeng Glory 330s. Regístrate para realizar pedidos.</p><p><a class='btn' href='catalog.html'>Ver catálogo</a></p></div></div><div class='card'><h3>Cómo funciona</h3><ol class='small'><li>Regístrate / Inicia sesión</li><li>Busca en el catálogo interno o en tiendas externas</li><li>Añade al carrito</li><li>Hacer encargo (WhatsApp)</li></ol></div></main>
+<footer class='footer card' style='text-align:center'>Glory shop Osmarel — Encargos de piezas y accesorios para Dongfeng Glory 330s</footer>
+<button id='toHomeBtn' onclick="location.href='index.html'">Inicio</button>
+</body></html>

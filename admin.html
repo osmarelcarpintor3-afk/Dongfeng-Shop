@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'/><title>Admin - Glory shop Osmarel</title>
+<link rel='stylesheet' href='styles.css'/>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js'></script>
+<script src='firebaseConfig.js'></script>
+<script src='admin.js'></script>
+<script>firebase.initializeApp(firebaseConfig);</script>
+</head><body>
+<header class='header'><div class='top'><img src='assets/logo.png' class='site-logo' alt='Glory shop Osmarel'><nav class='nav'><a href='index.html'>Inicio</a><a href='catalog.html'>Catálogo</a><a href='market.html'>Buscar tiendas</a><a href='models.html'>Modelos</a><a href='videos.html'>Videos</a><a href='chat.html'>Chat</a><a href='cart.html'>Carrito</a><a href='admin.html'>Admin</a></nav></div></header>
+<main class='container'><div class='card'><h2>Admin</h2><div id='adminArea' class='card'>Debes iniciar sesión como admin.</div></div>
+<script>
+firebase.auth().onAuthStateChanged(function(user){ if(!user){ document.getElementById('adminArea').innerHTML = '<a href="login.html">Iniciar sesión</a>'; return; } if(user.uid !== ADMIN_UID){ document.getElementById('adminArea').innerHTML = '<div>Acceso denegado. No eres administración.</div>'; return; } var db = firebase.firestore(); document.getElementById('adminArea').innerHTML = '\
+  <h3>Crear producto</h3>\
+  <input id="p_sku" placeholder="SKU"/>\
+  <input id="p_name" placeholder="Nombre"/>\
+  <input id="p_short" placeholder="Descripción corta"/>\
+  <label>Visible: <input type="checkbox" id="p_visible" checked/></label>\
+  <button id="createBtn" class="btn">Crear</button>\
+  <h3>Productos existentes</h3>\
+  <div id="prodList"></div>\
+'; document.getElementById('createBtn').onclick = async function(){ var sku=document.getElementById('p_sku').value; var name=document.getElementById('p_name').value; var short=document.getElementById('p_short').value; var vis=document.getElementById('p_visible').checked; await db.collection('products').add({sku:sku,name:name,short:short,visible:vis,createdAt:firebase.firestore.FieldValue.serverTimestamp()}); loadList(); }; async function loadList(){ var snap = await db.collection('products').orderBy('createdAt','desc').get(); var el=document.getElementById('prodList'); el.innerHTML=''; snap.forEach(function(doc){ var d=doc.data(); var div=document.createElement('div'); div.className='card'; div.innerHTML = '<strong>'+ (d.name||'') +'</strong> <div class="small">SKU:' + (d.sku||'') +'</div> <button data-id="'+doc.id+'" class="btn delBtn">Eliminar</button>'; el.appendChild(div); }); var dels = document.querySelectorAll('.delBtn'); dels.forEach(function(b){ b.onclick = async function(){ var id = b.getAttribute('data-id'); if(confirm('Eliminar?')) await db.collection('products').doc(id).delete(); loadList(); }; }); }
+loadList(); });
+</script></main>
+<footer class='footer card' style='text-align:center'>Glory shop Osmarel — Encargos de piezas y accesorios para Dongfeng Glory 330s</footer>
+<button id='toHomeBtn' onclick="location.href='index.html'">Inicio</button>
+<script src="app.js"></script><script src="admin.js"></script></body></html>

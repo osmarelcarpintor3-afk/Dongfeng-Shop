@@ -1,0 +1,28 @@
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'/><title>Buscar tiendas - Glory shop Osmarel</title>
+<link rel='stylesheet' href='styles.css'/>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js'></script>
+<script src='firebaseConfig.js'></script>
+<script src='admin.js'></script>
+<script>firebase.initializeApp(firebaseConfig);</script>
+</head><body>
+<header class='header'><div class='top'><img src='assets/logo.png' class='site-logo' alt='Glory shop Osmarel'><nav class='nav'><a href='index.html'>Inicio</a><a href='catalog.html'>Catálogo</a><a href='market.html'>Buscar tiendas</a><a href='models.html'>Modelos</a><a href='videos.html'>Videos</a><a href='chat.html'>Chat</a><a href='cart.html'>Carrito</a><a href='admin.html'>Admin</a></nav></div></header>
+<main class='container'><div class='card'><h2>Buscar en tiendas externas</h2>
+<input id='q' placeholder='Buscar producto...'/><select id='market'><option value='taobao'>Taobao</option><option value='amazon'>Amazon.ca</option><option value='aliexpress'>AliExpress</option><option value='alibaba'>Alibaba</option><option value='shein'>SHEIN</option></select>
+<div style='display:flex;gap:8px;margin-top:8px'><button id='searchBtn' class='btn'>Buscar</button><button id='addLinkBtn' class='btn'>Agregar enlace al carrito</button></div>
+<p class='small'>Abre la tienda en nueva pestaña y pega el enlace del producto para agregarlo al carrito.</p>
+<input id='externalLink' placeholder='Pegar enlace aquí para agregar al carrito'/>
+</div>
+<script>
+// Auth guard for market page
+firebase.auth().onAuthStateChanged(function(user){ if(!user) window.location.href='login.html'; });
+var patterns = { taobao:function(q){return 'https://s.taobao.com/search?q='+encodeURIComponent(q)}, amazon:function(q){return 'https://www.amazon.ca/s?k='+encodeURIComponent(q)}, aliexpress:function(q){return 'https://www.aliexpress.com/wholesale?SearchText='+encodeURIComponent(q)}, alibaba:function(q){return 'https://www.alibaba.com/trade/search?SearchText='+encodeURIComponent(q)}, shein:function(q){return 'https://www.shein.com/search?keyword='+encodeURIComponent(q)} };
+document.getElementById('searchBtn').onclick = function(){ var q=document.getElementById('q').value.trim(); var m=document.getElementById('market').value; if(!q){alert('Ingresa término');return;} window.open(patterns[m](q),'_blank'); };
+async function fetchPreviewViaFunction(url){ try{ var fn = 'https://us-central1-dongfeng-shop.cloudfunctions.net/fetchMetadata?url=' + encodeURIComponent(url); var r = await fetch(fn); if(!r.ok) return {success:false}; var j = await r.json(); return {success:true, title:j.meta.title || '', image:j.meta.image || ''}; }catch(e){ return {success:false}; } }
+document.getElementById('addLinkBtn').onclick = async function(){ var link=document.getElementById('externalLink').value.trim(); if(!link){alert('Pega el enlace');return;} var preview = await fetchPreviewViaFunction(link); var title='', image=''; if(preview.success){ title = preview.title; image = preview.image; } else { title = prompt('No se pudo obtener información automáticamente. Ingresa un título para el producto o deja vacío:'); image = prompt('Si tienes URL de imagen pégala aquí (opcional):'); } var cart = JSON.parse(localStorage.getItem('cart')||'[]'); cart.push({type:'external', link:link, title: title||'', image: image||''}); localStorage.setItem('cart', JSON.stringify(cart)); alert('Enlace agregado al carrito'); if(window.location.pathname.split('/').pop()==='cart.html') window.location.reload(); };
+</script></main>
+<footer class='footer card' style='text-align:center'>Glory shop Osmarel — Encargos de piezas y accesorios para Dongfeng Glory 330s</footer>
+<button id='toHomeBtn' onclick="location.href='index.html'">Inicio</button>
+</body></html>

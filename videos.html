@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'/><title>Videos - Glory shop Osmarel</title>
+<link rel='stylesheet' href='styles.css'/>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js'></script>
+<script src='firebaseConfig.js'></script>
+<script src='admin.js'></script>
+<script>firebase.initializeApp(firebaseConfig);</script>
+</head><body>
+<header class='header'><div class='top'><img src='assets/logo.png' class='site-logo' alt='Glory shop Osmarel'><nav class='nav'><a href='index.html'>Inicio</a><a href='catalog.html'>Catálogo</a><a href='market.html'>Buscar tiendas</a><a href='models.html'>Modelos</a><a href='videos.html'>Videos</a><a href='chat.html'>Chat</a><a href='cart.html'>Carrito</a><a href='admin.html'>Admin</a></nav></div></header>
+<main class='container'><div class='card'><h2>Videos - soluciones y trucos</h2><div class='card'><iframe width='100%' height='315' src='https://www.youtube.com/embed/dQw4w9WgXcQ' title='Video demo' frameborder='0' allowfullscreen></iframe><p class='small'>Reemplaza con playlist real sobre Dongfeng Glory 330s.</p></div></div><main><div id="videos-grid" class="grid container"></div></main>
+<footer class='footer card' style='text-align:center'>Glory shop Osmarel — Encargos de piezas y accesorios para Dongfeng Glory 330s</footer>
+<button id='toHomeBtn' onclick="location.href='index.html'">Inicio</button>
+<script src="app.js"></script><script>document.addEventListener("auth-changed",(e)=>{ if(!e.detail.user){ document.getElementById("videos-grid").innerHTML="<p class=\"small\">Debes iniciar sesión para ver los videos.</p>"; } else loadVideos(); }); if(window.auth && auth.currentUser) loadVideos();</script></body></html>
